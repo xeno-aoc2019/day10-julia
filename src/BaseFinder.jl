@@ -2,17 +2,6 @@
 module BaseFinder
     include("Input.jl")
 
-#     struct Pos
-#         x :: Int64
-#         y :: Int64
-#     end
-#
-#     struct StarInfo
-#         rel :: Pos
-#         norm :: Pos
-#         orig :: Pos
-#     end
-
     struct BaseInfo
         base :: Main.Input.Pos
         satellite_count :: Int64

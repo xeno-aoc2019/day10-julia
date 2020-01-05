@@ -7,12 +7,6 @@ module Input
         y :: Int64
     end
 
-    struct StarInfo
-        rel :: Pos
-        norm :: Pos
-        orig :: Pos
-    end
-
     function read_stars()
         stars = Pos[];
         open("input.txt") do input
