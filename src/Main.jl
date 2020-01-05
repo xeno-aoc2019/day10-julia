@@ -4,8 +4,9 @@ include("Stars.jl")
 
 function swipe(base, stars)
     sats = Stars.satellite_info(base, stars)
+    sats2 = sort(sats, lt=Stars.isless)
     println("Base: ", base)
-    println("Stars: ", sats)
+    println("Stars: ", sats2)
 end
 
 function main()

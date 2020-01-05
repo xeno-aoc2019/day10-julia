@@ -10,6 +10,31 @@ module Stars
         orig :: Main.Stars.Input.Pos
     end
 
+    function isless(si1::StarInfo, si2::StarInfo)
+        if si1.sector != si2.sector
+            return si1.sector < si2.sector
+        end
+        if si1.norm.x != si2.norm.x
+            return si1.norm.x < si2.norm.x
+        end
+        if si1.norm.y != si2.norm.y
+            return si1.norm.y < si2.norm.y
+        end
+        if si1.rel.x != si2.rel.x
+            return si1.rel.x < si2.rel.x
+        end
+        if si1.rel.y != si2.rel.y
+            return si1.rel.y < si2.rel.y
+        end
+        if si1.orig.x != si2.orig.x
+            return si1.orig.x < si2.orig.x
+        end
+        if si1.orig.y != si2.orig.y
+            return si1.orig.y < si2.orig.y
+        end
+        return false
+    end
+
     function satellite_info(base, stars)
         sats = StarInfo[]
         for star in stars
