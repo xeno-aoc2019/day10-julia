@@ -3,6 +3,11 @@ struct Pos
     y :: Int64
 end
 
+struct StarInfo
+    rel :: Pos
+    norm :: Pos
+    orig :: Pos
+end
 
 function read_stars()
     stars = Pos[];
@@ -24,5 +29,33 @@ function read_stars()
     stars
 end
 
-stars = read_stars()
-println(stars)
+function directions_around(base :: Pos, all_stars :: Array{Pos})
+    satellites = Pos[]
+    for star in all_stars
+        if star != base
+            dir = Pos(star.x - base.x, base.y - star.y)
+            fact = gcd(dir.x, dir.y)
+            norm_dir = Pos(dir.x / fact, dir.y / fact)
+            push!(satellites, norm_dir)
+        end
+    end
+    Set(satellites)
+end
+
+function find_best_base()
+    stars = read_stars();
+    count = 0;
+    base = Pos(0,0);
+    for star in stars
+        surroundings = directions_around(star,stars)
+        if length(surroundings) > count
+            count = length(surroundings)
+            base = star
+        end
+    end
+    println(stars)
+    println("Base: ", base, " satelites: ", count)
+end
+
+find_best_base()
+
