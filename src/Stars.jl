@@ -55,6 +55,7 @@ module Stars
         if (pos.x == 0 && pos.y > 0) return 1; end       # north
         if (pos.x == 0 && pos.y < 0) return 7; end       # south
         if (pos.x > 0 && pos.y == 0) return 4; end       # east
+        if (pos.x < 0 && pos.y == 0) return 10; end       # west
         if (pos.x > 0 && pos.y > pos.x) return 2; end    # nne
         if (pos.x > 0 && pos.y > 0) return 3; end        # nee
         if (pos.x > 0 && pos.y < -pos.x) return 6; end   # sse
@@ -67,26 +68,62 @@ module Stars
     end
 
     function rotational_sectors(stars:: Array{StarInfo})
-        current :: Array{Array{StarInfo}} = []
+
+        if stars == []
+            return []
+        end
+
+        current :: Array{Array{Tuple{Int64,Int64,Int64}}} = []
         next :: Array{StarInfo} = []
         sector :: Array{StarInfo} = []
 
         sector_id = 0
         last_vec = (0,0)
         for star in stars
-            if vec == last_vec
+            if star.norm == last_vec
                 push!(next, star)
             else
                 if star.sector != sector_id
-                    if (sector_id in [5,6,7,8,9])
-                        sector = reverse(sector)
-                    end
-                    push!(current,sector)
+#                     sector2 = sort(scaled(sector))
+#                     if (sector_id in [5, 6, 7, 8, 9])
+#                         sector2 = reverse(sector2)
+#                     end
+                    sector2 = sort_by_direction(sector_id, sector)
+                    push!(current,sector2)
+                    sector_id = star.sector
                     sector = []
                 end
                 push!(sector, star)
+                last_vec = star.norm
             end
         end
-        vcat(current, next)
+        vcat(current, rotational_sectors(next))
+    end
+
+    function sort_by_direction(sector_id::Int64, sector::Array{StarInfo})
+            sector2 = sort(scaled(sector))
+            if (sector_id in [5, 6, 7, 8, 9])
+                return reverse(sector2)
+            end
+            return sector2
+    end
+
+    function scale(star::StarInfo, xes::Set{Int64})
+        ax = abs(star.norm.x)
+        y = star.norm.y
+        for x in xes
+            if ax != x
+                y = y * x
+            end
+        end
+        (star.sector, y, star.orig.x * 100 + star.orig.y)
+    end
+
+    function scaled(sector::Array{StarInfo})
+        xes = Set(map((si::StarInfo) -> abs(si.norm.x), sector))
+        stars = map((si::StarInfo) -> scale(si, xes), sector)
+        println("Set: ", xes,":", sector, " " ,map((si::StarInfo) -> abs(si.norm.x), sector)," => ", stars)
+        stars
     end
 end
+
