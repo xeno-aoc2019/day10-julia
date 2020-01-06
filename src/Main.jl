@@ -4,9 +4,15 @@ include("Stars.jl")
 
 function swipe(base, stars)
     sats = Stars.satellite_info(base, stars)
-    sats2 = sort(sats, lt=Stars.isless)
+    sats2 = sort(sats, lt = Stars.isless)
     println("Base: ", base)
     println("Stars: ", sats2)
+    s1 = Stars.rotational_sectors(sats2)
+    println("Grouped: ", s1)
+    s2 = collect(Iterators.flatten(s1))
+    println("Grouped2: ", s2)
+    println("Answer: ", s2[200])
+
 end
 
 function main()

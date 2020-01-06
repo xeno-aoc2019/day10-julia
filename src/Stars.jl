@@ -66,4 +66,27 @@ module Stars
         return 99; # ERROR, should not occur
     end
 
+    function rotational_sectors(stars:: Array{StarInfo})
+        current :: Array{Array{StarInfo}} = []
+        next :: Array{StarInfo} = []
+        sector :: Array{StarInfo} = []
+
+        sector_id = 0
+        last_vec = (0,0)
+        for star in stars
+            if vec == last_vec
+                push!(next, star)
+            else
+                if star.sector != sector_id
+                    if (sector_id in [5,6,7,8,9])
+                        sector = reverse(sector)
+                    end
+                    push!(current,sector)
+                    sector = []
+                end
+                push!(sector, star)
+            end
+        end
+        vcat(current, next)
+    end
 end
